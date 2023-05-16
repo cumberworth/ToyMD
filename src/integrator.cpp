@@ -55,8 +55,6 @@ void VerletIntegrator::init_velocities(RandomGens& random_gens) {
 
 void VerletIntegrator::step() {
     for (int i {0}; i != m_system.num_particles; ++i) {
-
-        // use pre initialized vector?
         Vector3 Dr {
                 m_space.calc_diff(2 * m_system.get_pos(i), m_old_config[i])};
         Vector3 v {Dr + m_interactions.get_force(i) * m_Dt2};
@@ -80,39 +78,17 @@ void VerletIntegrator::step_and_scale() {
 
         Vector3& F {m_interactions.get_force(i)};
         F *= m_Dt2;
-        //        cout << "force " << i << " " << F[0] << " " << F[1] << " " <<
-        //        F[2] << endl; Vector3& p {m_system.get_pos(i)}; cout <<
-        //        "current position " << i << " " << p[0] << " " << p[1] << " "
-        //        << p[2] << endl; cout << "old position " << i << " " <<
-        //        m_old_config[i][0] << " " << m_old_config[i][1]
-        //             << " " << m_old_config[i][2] << endl;
-        //        cout << "2p - po " << i << " " << Dr[0] << " " << Dr[1] << " "
-        //        << Dr[2] << endl; cout << "new position " << i << " " <<
-        //        m_new_config[i][0] << " " << m_new_config[i][1]
-        //             << " " << m_new_config[i][2] << endl;
-        //        cout << "old velocity " << i << " " << m_velocities[i][0] << "
-        //        " << m_velocities[i][1]
-        //             << " " << m_velocities[i][2] << endl;
-        //        cout << "new velocity " << i << m_velocities[i][0] << " " <<
-        //        m_velocities[i][1]
-        //             << " " << m_velocities[i][2] << endl;
     }
     momentum /= m_system.num_particles;
 
     double scalef {
             calc_velocity_scalef(m_system.num_particles, m_temp, energy_kin)};
-    // cout << energy_kin << " " << scalef << " ";
     for (int i {0}; i != m_system.num_particles; ++i) {
         m_velocities[i] *= scalef;
         m_new_config[i] = 2 * m_Dt * m_velocities[i] + m_old_config[i];
         m_old_config[i] = m_system.get_pos(i);
         m_system.set_pos(i, m_new_config[i]);
     }
-
-    //    cout << "momentum " << momentum[0] << " " << momentum[1] << " " <<
-    //    momentum[2] << endl; cout << calc_energy_kin() << " " <<
-    //    m_interactions.calc_energy_pot()
-    //         << endl;
 }
 
 double VerletIntegrator::calc_energy_kin() {

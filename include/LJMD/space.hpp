@@ -125,7 +125,7 @@ inline double sqnorm(const Vector3 v) {
 inline Vector3 round(const Vector3 v) {
     Vector3 vo {};
     for (int i {0}; i != 3; ++i) {
-        vo[i] = std::round(v[i]);
+        vo[i] = std::rint(v[i]);
     }
 
     return vo;
@@ -145,31 +145,16 @@ class SimpleCubicPBC {
     SimpleCubicPBC(double boxl): boxl {boxl}, m_iboxl {1 / boxl} {};
 
     inline Vector3 calc_diff(Vector3 v1, Vector3 v2) {
-        //Vector3 vo {v1 - v2};
-        //Vector3 voo {vo};
-        Vector3 vo {};
-        vo[0] = v1[0] - v2[0];
-        vo[1] = v1[1] - v2[1];
-        vo[2] = v1[2] - v2[2];
-
-        vo[0] -= boxl*std::round(vo[0]*m_iboxl);
-        vo[1] -= boxl*std::round(vo[1]*m_iboxl);
-        vo[2] -= boxl*std::round(vo[2]*m_iboxl);
-        //vo *= m_iboxl;
-        //vo = round(vo);
-        //vo *= boxl;
-        // check this works
-        //vo -= boxl * round((vo)*m_iboxl);
+        Vector3 vo {v1 - v2};
+        vo -= boxl * round((vo)*m_iboxl);
         return vo;
     }
 
-    // check this works
     inline void wrap(Vector3& v) { v -= boxl * floor(v * m_iboxl); }
 
     const double boxl;
 
-    //mod
-  //private:
+  private:
     const double m_iboxl;
 };
 

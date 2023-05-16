@@ -29,17 +29,12 @@ int main(const int argc, const char* argv[]) {
 
         system->set_config_to_lattice();
         integrator->init_velocities(*random_gens);
-        // cout << integrator->calc_energy_kin() << endl;
         auto quantities = std::make_unique<Quantities>(
                 *system, *interactions, *integrator);
         VTFOutputFile vtf_ofile {"test.vtf", *system};
         QuantitiesOutputFile quantities_ofile {"test.dat", *quantities};
-        //vtf_ofile.write_step(0);
-        //quantities->update();
-        //quantities_ofile.write_step(0);
         for (int step {0}; step != params.init_steps; ++step) {
             interactions->calc_forces();
-//            cout << "step " << step << endl;
             integrator->step_and_scale();
         }
 
