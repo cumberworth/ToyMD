@@ -32,12 +32,12 @@ target_compile_features(LJMD_lib PRIVATE cxx_std_17)
 target_include_directories(LJMD_lib PUBLIC include)
 
 # Interprocedular optimization
-include(CheckIPOSupported)
-check_ipo_supported(RESULT result)
-if(result)
-  message(STATUS "Using interprocedural optimization.")
-  set_target_properties(LJMD_lib PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
-endif()
+#include(CheckIPOSupported)
+#check_ipo_supported(RESULT result)
+#if(result)
+#  message(STATUS "Using interprocedural optimization.")
+#  set_target_properties(LJMD_lib PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+#endif()
 
 # CCache (increased compiliation speed)
 find_program(CCACHE_PROGRAM ccache)
@@ -62,6 +62,8 @@ target_link_libraries(LJMD_lib PUBLIC Boost::program_options)
 # -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual
 # -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference
 # -Wdouble-promotion)
+
+target_compile_options(LJMD_lib PUBLIC -ffast-math)
 
 # Main simulation program
 add_executable(LJMD apps/main.cpp)
