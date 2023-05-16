@@ -1,0 +1,8 @@
+.cache/
+*debug*
+*release*
+*swp
+*txt
+*tags
+localtests/
+compile_commands.json
